@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.mapper.MenuMapper">
+
+	<insert id="insert">
+		insert into tbl_menu (bno, fsize, italic, underline) 
+			values (seq_member.nextval, #{fsize},#{italic},#{underline})
+	</insert>
+	
+	<insert id="insertSelectKey">	
+		<selectKey keyProperty="bno" order="BEFORE" resultType="int">
+			select seq_member.nextval from dual
+		</selectKey>
+		insert into tbl_menu (bno, fsize, italic, underline)
+			values(#{bno},#{fsize}, #{italic},#{underline})
+	</insert>
+	
+	
+	<update id="update">
+		update tbl_menu
+			set fsize =#{fsize}, italic=#{italic}, underline=#{underline}
+				where bno = #{bno}
+	</update>
+
+
+</mapper>

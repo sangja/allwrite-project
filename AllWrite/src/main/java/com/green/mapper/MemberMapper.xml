@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.mapper.MemberMapper">
+  <resultMap id="BaseResultMap" type="com.green.vo.Member">
+    <id column="MNO" jdbcType="NUMERIC" property="mno" />
+    <result column="MNAME" jdbcType="VARCHAR" property="mname" />
+    <result column="CONTENT" jdbcType="VARCHAR" property="content" />
+    <result column="WRITER" jdbcType="VARCHAR" property="writer" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from MEMBER
+    where MNO = #{mno,jdbcType=NUMERIC}
+  </delete>
+  <insert id="insert" parameterType="com.green.vo.Member">
+    insert into MEMBER (MNO, MNAME, CONTENT, 
+      WRITER, TITLE)
+    values (#{mno,jdbcType=NUMERIC}, #{mname,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{writer,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.green.vo.Member">
+    update MEMBER
+    set MNAME = #{mname,jdbcType=VARCHAR},
+      CONTENT = #{content,jdbcType=VARCHAR},
+      WRITER = #{writer,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR}
+    where MNO = #{mno,jdbcType=NUMERIC}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select MNO, MNAME, CONTENT, WRITER, TITLE
+    from MEMBER
+    where MNO = #{mno,jdbcType=NUMERIC}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select MNO, MNAME, CONTENT, WRITER, TITLE
+    from MEMBER
+  </select>
+</mapper>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+  <meta charset="UTF-8">
+  <title>JavaScript Rich Text Editor | webdevtrick.com</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css">
+  <link rel="stylesheet" href="write-style.css">
+
+</head>
+  <body onload="enableEditMode()">
+    <div class="test">
+      <button onclick="Edit('bold')" title="bold"><i class="fa fa-bold"></i></button>
+      <button onclick="Edit('italic')" title="italic"><i class="fa fa-italic"></i></button>
+      <button onclick="Edit('underline')" title="underline"><i class="fa fa-underline"></i></button>
+      <button onclick="Edit('strikeThrough')" title="strikeThrough"><i class="fa fa-strikethrough"></i></button>
+      <button onclick="Edit('justifyLeft')" title="Align Left"><i class="fa fa-align-left"></i></button>
+      <button onclick="Edit('justifyCenter')" title="Align Center"><i class="fa fa-align-center"></i></button>
+      <button onclick="Edit('justifyFull')" title="justify"><i class="fa fa-align-justify"></i></button>
+      <button onclick="Edit('cut')" title="cut"><i class="fa fa-cut"></i></button>
+      <button onclick="Edit('copy')" title="Copy"><i class="fa fa-copy"></i></button>
+      <button onclick="Edit('indent')" title="text-indent"><i class="fa fa-indent"></i></button>
+      <button onclick="Edit('outdent')" title="text outdent"><i class="fa fa-outdent"></i></button>
+      <button onclick="Edit('subscript')" title="subscript"><i class="fa fa-subscript"></i></button>
+      <button onclick="Edit('superscript')" title="subscript"><i class="fa fa-superscript"></i></button>
+      <button onclick="Edit('undo')" title="undo"><i class="fa fa-undo"></i></button>
+      <button onclick="Edit('redo')" title="redo"><i class="fa fa-redo"></i></button>
+      <button onclick="Edit('insertUnorderedList')" title="unordered list"><i class="fa fa-list-ul"></i></button>
+      <button onclick="Edit('insertOrderedList')" title="ordered list"><i class="fa fa-list-ol"></i></button>
+      <button onclick="Edit('insertParagraph')"><i class="fa fa-paragraph"></i></button>
+      <select onchange="execVal('formatBlock',this.value)">
+          <option value="H1">H1</option>
+          <option value="H2">H2</option>
+          <option value="H3">H3</option>
+          <option value="H4">H4</option>
+          <option value="H5">H5</option>
+          <option value="H6">H6</option>
+        </select>
+      <br>
+      <button onclick="Edit('insertHorizontalRule')" title="insert Horizontal Rule">insert Horizontal Rule</button>
+      <button onclick="Edit('createLink',prompt('Enter a URL,http://'))"><i class="fa fa-link"></i></button>
+      <button onclick="Edit('unlink')"><i class="fa fa-unlink"></i></button>
+      <select onchange="execVal('fontName',this.value)">
+          <option value="Arial">Arial</option>
+          <option value="Comic Sans MS">Comic Sans MS</option>
+          <option value="Courier">Courier</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Tahoma">Tahoma</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Verdana">Verdana</option>
+        </select>
+      <select onchange="execVal('fontSize',this.value)" title="font size">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+      </select>Font Color<input type="color" onchange="execVal('foreColor',this.value)" /> Highlight<input type="color" onchange="execVal('hiliteColor',this.value)" />
+    </div>
+  
+  <span class="drag-area">
+  <iframe id="editText" name="richTextField"></iframe>
+  </span>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script type="text/javascript">
+
+function enableEditMode() {
+  richTextField.document.designMode = "on";
+}
+function Edit(command) {
+  richTextField.document.execCommand(command, false, null);
+}
+function execVal(command, value) {
+  richTextField.document.execCommand(command, false, value);
+}
+
+
+/* -------------------------Drag image into Html start--------------------------------*/
+
+const iframeObj = document.querySelector('#editText');
+const editBody = iframeObj.contentWindow.document.body;
+const newDiv = document.createElement('div');
+const writeDiv = document.createElement('div');
+
+writeDiv.setAttribute("class", 'write')
+writeDiv.setAttribute("contentEditable", "false");
+writeDiv.style.width="100%"; 
+writeDiv.style.height="25px";
+editBody.appendChild(writeDiv);
+
+/*이미지를 넣을 박스*/
+newDiv.setAttribute("class", "item");
+newDiv.setAttribute("contentEditable", "false");
+newDiv.style.width="200px";
+newDiv.style.height="200px";
+newDiv.style.backgroundColor="red";
+newDiv.style.position="absolute";
+newDiv.style.cursor="pointer";
+editBody.appendChild(newDiv);
+
+let file;
+editBody.addEventListener('dragover', (event)=> {
+  event.preventDefault();
+})
+editBody.addEventListener('dragleave', ()=> {
+
+})
+
+editBody.addEventListener('drop', (event)=> {
+  event.preventDefault();
+  file = event.dataTransfer.files[0];
+  let fileType = file.type;
+  console.log(fileType)
+
+  let validExtensions = ["image/jpeg", "image/jpg", "image/png"]
+  if(validExtensions.includes(fileType)){
+    let fileReader = new FileReader();
+    fileReader.onload = () => {
+      let fileURL = fileReader.result;
+      let imgTag=`<img src="${fileURL}" style="width: 100%;" alt="">` 
+      newDiv.innerHTML = imgTag; 
+    }
+    fileReader.readAsDataURL(file);
+  }else {
+    alert("this is not an Image File")
+  }
+})
+
+/* -------------------------Drag image into Html end--------------------------------*/
+
+
+
+/*---------------------------------이미지 움직이기-----------------------------------*/
+const el = editBody.querySelector(".item");
+let isResizing = false;
+
+let ne = document.createElement('div');
+let nw = document.createElement('div');
+let sw = document.createElement('div');
+let se = document.createElement('div');
+ne.classList.add("resizer", "ne");
+nw.classList.add("resizer", "nw");
+sw.classList.add("resizer", "sw");
+se.classList.add("resizer", "se"); 
+newDiv.append(ne);
+newDiv.append(nw);
+newDiv.append(sw);
+newDiv.append(se);
+
+var $resizer = $('#editText').contents().find(".resizer");
+var $nw = $('#editText').contents().find('.resizer.nw');
+var $ne = $('#editText').contents().find('.resizer.ne');
+var $sw = $('#editText').contents().find('.resizer.sw');
+var $se = $('#editText').contents().find('.resizer.se');
+
+$resizer.css({'background-color': 'black','width': '5px','height': '5px','border-radius': '5px','position': 'absolute'})
+$nw.css({'top': '-1px','left': '-1px','position': 'absolute','cursor': 'nw-resize'})
+$ne.css({'top': '-1px','right': '-1px','position': 'absolute','cursor': 'ne-resize'})
+$sw.css({'bottom': '-1px','left': '-1px','position': 'absolute','cursor': 'sw-resize'})
+$se.css({'bottom': '-1px','right': '-1px','position': 'absolute','cursor': 'se-resize'})
+
+el.addEventListener("mousedown", mousedown);
+function mousedown(e) {
+  console.log("마우스 다운이 된다")
+  el.addEventListener("mousemove", mousemove);
+  el.addEventListener("mouseup", mouseup);
+
+  let prevX = e.clientX;
+  let prevY = e.clientY;
+
+  function mousemove(e) {
+    if (!isResizing) {
+      let newX = prevX - e.clientX;
+      let newY = prevY - e.clientY;
+      const rect = el.getBoundingClientRect();
+      el.style.left = rect.left - newX + "px";
+      el.style.top = rect.top - newY + "px";
+      prevX = e.clientX;
+      prevY = e.clientY;
+      var windowWidth = $('#editText').width();
+      var windowHeight =$('#editText').height();
+
+      // console.log("윈도우 창", windowWidth)
+      // console.log("아이템 left: ", el.getBoundingClientRect().left)
+      // console.log("아이템 right:", el.getBoundingClientRect().right)
+
+    }
+  }
+
+  function mouseup() {
+    el.removeEventListener("mousemove", mousemove);
+    el.removeEventListener("mouseup", mouseup);
+  }
+}
+
+/*----------------------------양 귀퉁이 점선 및 리사이징----------------------------*/
+const resizers = $(editBody).contents().find(".resizer");
+let currentResizer;
+
+for (let resizer of resizers) {
+  resizer.addEventListener("mousedown", mousedown);
+
+  function mousedown(e) {
+    currentResizer = e.target;
+    isResizing = true;
+    let prevX = e.clientX;
+    let prevY = e.clientY;
+
+    el.addEventListener("mousemove", mousemove);
+    el.addEventListener("mouseup", mouseup);
+
+    function mousemove(e) {
+      const rect = el.getBoundingClientRect();
+      if (currentResizer.classList.contains("se")) {
+        el.style.width = rect.width - (prevX - e.clientX) + "px";
+        el.style.height = rect.height - (prevY - e.clientY) + "px";
+      } else if (currentResizer.classList.contains("sw")) {
+        el.style.width = rect.width + (prevX - e.clientX) + "px";
+        el.style.height = rect.height - (prevY - e.clientY) + "px";
+        el.style.left = rect.left - (prevX - e.clientX) + "px";
+      } else if (currentResizer.classList.contains("ne")) {
+        el.style.width = rect.width - (prevX - e.clientX) + "px";
+        el.style.height = rect.height + (prevY - e.clientY) + "px";
+        el.style.top = rect.top - (prevY - e.clientY) + "px";
+      } else if(currentResizer.classList.contains("nw")){
+        el.style.width = rect.width - (prevX - e.clientX) + "px";
+        el.style.height = rect.height + (prevY - e.clientY) + "px";
+        el.style.top = rect.top - (prevY - e.clientY) + "px";
+      }else {
+        el.style.width = rect.width + (prevX - e.clientX) + "px";
+        el.style.height = rect.height + (prevY - e.clientY) + "px";
+        el.style.top = rect.top - (prevY - e.clientY) + "px";
+        el.style.left = rect.left - (prevX - e.clientX) + "px";
+      }
+      prevX = e.clientX;
+      prevY = e.clientY;
+    }
+
+    function mouseup() {
+      el.removeEventListener("mousemove", mousemove);
+      el.removeEventListener("mouseup", mouseup);
+      isResizing = false;
+    }
+  }
+}
+
+let aaa = $('#editText').contents().find('body');
+let bbb = aaa.find('div')
+aaa.on('click', function(){
+  console.log("height:", bbb.clientHeight)
+})
+
+
+
+
+/* -------------------------move image and Resize start-----------------------------*/	
+</script>
+
+</body>
+</html>

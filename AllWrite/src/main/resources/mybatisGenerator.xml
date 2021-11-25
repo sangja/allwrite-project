@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  	<context id="simple" targetRuntime="MyBatis3simple">
+    <jdbcConnection connectionURL="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE" driverClass="net.sf.log4jdbc.sql.jdbcapi.DriverSpy" password="1234" userId="allwrite" />
+		<javaModelGenerator
+			targetPackage="com.green.vo"
+			targetProject="AllWrite/src/main/java">
+		</javaModelGenerator>
+
+		<sqlMapGenerator 
+			targetPackage="com.green.mapper"
+			targetProject="AllWrite/src/main/java" />
+
+		<javaClientGenerator
+			targetPackage="com.green.mapper" 
+			targetProject="AllWrite/src/main/java"
+			type="XMLMAPPER" />
+			
+		<table tableName="member" />
+  </context>
+</generatorConfiguration>
+

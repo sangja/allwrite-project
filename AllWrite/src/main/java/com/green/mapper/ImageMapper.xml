@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.mapper.ImageMapper">
+  <resultMap id="BaseResultMap" type="com.green.vo.Image">
+    <result column="INO" jdbcType="NUMERIC" property="ino" />
+    <result column="FILENAME" jdbcType="VARCHAR" property="filename" />
+    <result column="UPLOADPATH" jdbcType="VARCHAR" property="uploadpath" />
+    <result column="UUID" jdbcType="VARCHAR" property="uuid" />
+    <result column="IMAGE" jdbcType="VARCHAR" property="image" />
+  </resultMap>
+  <insert id="insert" parameterType="com.green.vo.Image">
+    insert into IMAGE (INO, FILENAME, UPLOADPATH, 
+      UUID, IMAGE)
+    values (#{ino,jdbcType=NUMERIC}, #{filename,jdbcType=VARCHAR}, #{uploadpath,jdbcType=VARCHAR}, 
+      #{uuid,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select INO, FILENAME, UPLOADPATH, UUID, IMAGE
+    from IMAGE
+  </select>
+</mapper>

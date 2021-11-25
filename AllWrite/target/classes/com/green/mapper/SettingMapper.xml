@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.green.mapper.SettingMapper">
+  <resultMap id="BaseResultMap" type="com.green.vo.Setting">
+    <result column="SNO" jdbcType="NUMERIC" property="sno" />
+    <result column="PRINT" jdbcType="VARCHAR" property="print" />
+    <result column="WIDTH" jdbcType="NUMERIC" property="width" />
+    <result column="HEIGHT" jdbcType="NUMERIC" property="height" />
+    <result column="UNIT" jdbcType="NUMERIC" property="unit" />
+    <result column="COLUMN_NUM" jdbcType="NUMERIC" property="columnNum" />
+    <result column="COLUMN_GUTTER" jdbcType="VARCHAR" property="columnGutter" />
+    <result column="ORIENTATION" jdbcType="VARCHAR" property="orientation" />
+    <result column="MARGIN_TOP" jdbcType="NUMERIC" property="marginTop" />
+    <result column="MARGIN_BOTTOM" jdbcType="NUMERIC" property="marginBottom" />
+    <result column="MARGIN_RIGHT" jdbcType="NUMERIC" property="marginRight" />
+    <result column="MARGIN_LEFT" jdbcType="NUMERIC" property="marginLeft" />
+    <result column="BLEED_TOP" jdbcType="NUMERIC" property="bleedTop" />
+    <result column="BLEED_LEFT" jdbcType="NUMERIC" property="bleedLeft" />
+    <result column="BLEED_BOTTOM" jdbcType="NUMERIC" property="bleedBottom" />
+    <result column="BLEED_RIGHT" jdbcType="NUMERIC" property="bleedRight" />
+  </resultMap>
+  <insert id="insert" parameterType="com.green.vo.Setting">
+    insert into SETTING (SNO, PRINT, WIDTH, 
+      HEIGHT, UNIT, COLUMN_NUM, 
+      COLUMN_GUTTER, ORIENTATION, MARGIN_TOP, 
+      MARGIN_BOTTOM, MARGIN_RIGHT, MARGIN_LEFT, 
+      BLEED_TOP, BLEED_LEFT, BLEED_BOTTOM, 
+      BLEED_RIGHT)
+    values (#{sno,jdbcType=NUMERIC}, #{print,jdbcType=VARCHAR}, #{width,jdbcType=NUMERIC}, 
+      #{height,jdbcType=NUMERIC}, #{unit,jdbcType=NUMERIC}, #{columnNum,jdbcType=NUMERIC}, 
+      #{columnGutter,jdbcType=VARCHAR}, #{orientation,jdbcType=VARCHAR}, #{marginTop,jdbcType=NUMERIC}, 
+      #{marginBottom,jdbcType=NUMERIC}, #{marginRight,jdbcType=NUMERIC}, #{marginLeft,jdbcType=NUMERIC}, 
+      #{bleedTop,jdbcType=NUMERIC}, #{bleedLeft,jdbcType=NUMERIC}, #{bleedBottom,jdbcType=NUMERIC}, 
+      #{bleedRight,jdbcType=NUMERIC})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select SNO, PRINT, WIDTH, HEIGHT, UNIT, COLUMN_NUM, COLUMN_GUTTER, ORIENTATION, MARGIN_TOP, 
+    MARGIN_BOTTOM, MARGIN_RIGHT, MARGIN_LEFT, BLEED_TOP, BLEED_LEFT, BLEED_BOTTOM, BLEED_RIGHT
+    from SETTING
+  </select>
+</mapper>
